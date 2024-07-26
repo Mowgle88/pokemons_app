@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokemons_app/models/pokemon.dart';
 import 'package:pokemons_app/providers/pokemon_data_providers.dart';
+import 'package:pokemons_app/widgets/pokemon_description_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PokemonListTile extends ConsumerWidget {
@@ -29,27 +30,40 @@ class PokemonListTile extends ConsumerWidget {
     final isFavoritePokemon = _favoritePokemons.contains(pokemonUrl);
     return Skeletonizer(
       enabled: isLoading ? true : false,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: pokemon != null
-              ? NetworkImage(pokemon.sprites!.frontDefault!)
-              : null,
-        ),
-        title: Text(
-          pokemon?.name!.toUpperCase() ?? "Lsoading name for Pokemon",
-        ),
-        subtitle: Text("Has ${pokemon?.moves?.length.toString() ?? 0} movies"),
-        trailing: IconButton(
-          onPressed: () {
-            if (isFavoritePokemon) {
-              _favoritePokemonProvider.removeFavoritePokemon(pokemonUrl);
-            } else {
-              _favoritePokemonProvider.addFavoritePokemon(pokemonUrl);
-            }
-          },
-          icon: Icon(
-            isFavoritePokemon ? Icons.favorite : Icons.favorite_border,
-            color: Colors.red,
+      child: GestureDetector(
+        onTap: () {
+          if (!isLoading) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return PokemonDescriptionCard(pokemonUrl: pokemonUrl);
+              },
+            );
+          }
+        },
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: pokemon != null
+                ? NetworkImage(pokemon.sprites!.frontDefault!)
+                : null,
+          ),
+          title: Text(
+            pokemon?.name!.toUpperCase() ?? "Lsoading name for Pokemon",
+          ),
+          subtitle:
+              Text("Has ${pokemon?.moves?.length.toString() ?? 0} movies"),
+          trailing: IconButton(
+            onPressed: () {
+              if (isFavoritePokemon) {
+                _favoritePokemonProvider.removeFavoritePokemon(pokemonUrl);
+              } else {
+                _favoritePokemonProvider.addFavoritePokemon(pokemonUrl);
+              }
+            },
+            icon: Icon(
+              isFavoritePokemon ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
+            ),
           ),
         ),
       ),
