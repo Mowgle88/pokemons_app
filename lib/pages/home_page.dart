@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokemons_app/controllers/home_page_controller.dart';
+import 'package:pokemons_app/models/page_data.dart';
+import 'package:pokemons_app/models/pokemon.dart';
+
+final homePageControllProvider =
+    StateNotifierProvider<HomePageController, HomePageData>((ref) {
+  return HomePageController(HomePageData.initial());
+});
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -9,9 +17,13 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  late HomePageData _homePageData;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    _homePageData = ref.watch(homePageControllProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -38,9 +50,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                       SizedBox(
                         height: size.height * 0.6,
                         child: ListView.builder(
-                          itemCount: 10,
+                          itemCount: _homePageData.data?.results?.length ?? 0,
                           itemBuilder: (context, index) {
-                            return Text("index $index");
+                            PokemonListResult pokemon =
+                                _homePageData.data!.results![index];
+                            return Text(pokemon.url!);
                           },
                         ),
                       )
