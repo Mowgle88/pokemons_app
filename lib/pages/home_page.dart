@@ -64,35 +64,38 @@ class _HomePageState extends ConsumerState<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: size.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "All Pokemons",
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.6,
-                        child: ListView.builder(
-                          controller: _allPokemonListScrollController,
-                          itemCount: _homePageData.data?.results?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            PokemonListResult pokemon =
-                                _homePageData.data!.results![index];
-                            return PokemonListTile(pokemonUrl: pokemon.url!);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                )
+                _allPokemons(context, size),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _allPokemons(BuildContext context, Size size) {
+    return SizedBox(
+      width: size.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "All Pokemons",
+            style: TextStyle(fontSize: 25),
+          ),
+          SizedBox(
+            height: size.height * 0.6,
+            child: ListView.builder(
+              controller: _allPokemonListScrollController,
+              itemCount: _homePageData.data?.results?.length ?? 0,
+              itemBuilder: (context, index) {
+                PokemonListResult pokemon = _homePageData.data!.results![index];
+                return PokemonListTile(pokemonUrl: pokemon.url!);
+              },
+            ),
+          )
+        ],
       ),
     );
   }
