@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pokemons_app/pages/home_page.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pokemons_app/services/database_service.dart';
 import 'package:pokemons_app/services/http_service.dart';
 
 void main() async {
@@ -13,6 +14,10 @@ void main() async {
 Future<void> _setupService() async {
   GetIt.instance.registerSingleton<HTTPService>(
     HTTPService(),
+  );
+
+  GetIt.instance.registerSingleton<DatabaseService>(
+    DatabaseService(),
   );
 }
 
