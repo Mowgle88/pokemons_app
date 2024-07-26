@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokemons_app/controllers/home_page_controller.dart';
 import 'package:pokemons_app/models/page_data.dart';
 import 'package:pokemons_app/models/pokemon.dart';
+import 'package:pokemons_app/widgets/pokemon_list_tile.dart';
 
 final homePageControllProvider =
     StateNotifierProvider<HomePageController, HomePageData>((ref) {
@@ -54,7 +55,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           itemBuilder: (context, index) {
                             PokemonListResult pokemon =
                                 _homePageData.data!.results![index];
-                            return Text(pokemon.url!);
+                            return PokemonListTile(pokemonUrl: pokemon.url!);
                           },
                         ),
                       )
