@@ -7,10 +7,16 @@ import 'package:skeletonizer/skeletonizer.dart';
 class PokemonListTile extends ConsumerWidget {
   final String pokemonUrl;
 
-  const PokemonListTile({super.key, required this.pokemonUrl});
+  late FavoritePokemonProvider _favoritePokemonProvider;
+  late List<String> _favoritePokemons;
+
+  PokemonListTile({super.key, required this.pokemonUrl});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _favoritePokemonProvider = ref.watch(favoritePokemonProvider.notifier);
+    _favoritePokemons = ref.watch(favoritePokemonProvider);
+
     final pokemon = ref.watch(pokemonDataProvider(pokemonUrl));
     return pokemon.when(
       data: (data) => _tile(context, false, data),
@@ -20,6 +26,7 @@ class PokemonListTile extends ConsumerWidget {
   }
 
   Widget _tile(BuildContext context, bool isLoading, Pokemon? pokemon) {
+    final isFavoritePokemon = _favoritePokemons.contains(pokemonUrl);
     return Skeletonizer(
       enabled: isLoading ? true : false,
       child: ListTile(
@@ -33,8 +40,17 @@ class PokemonListTile extends ConsumerWidget {
         ),
         subtitle: Text("Has ${pokemon?.moves?.length.toString() ?? 0} movies"),
         trailing: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.favorite_border),
+          onPressed: () {
+            if (isFavoritePokemon) {
+              _favoritePokemonProvider.removeFavoritePokemon(pokemonUrl);
+            } else {
+              _favoritePokemonProvider.addFavoritePokemon(pokemonUrl);
+            }
+          },
+          icon: Icon(
+            isFavoritePokemon ? Icons.favorite : Icons.favorite_border,
+            color: Colors.red,
+          ),
         ),
       ),
     );
